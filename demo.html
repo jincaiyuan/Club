@@ -1,0 +1,138 @@
+<html>
+    <meta charset="UTF-8"/>
+        <style>
+            ul, li {
+                margin:0;
+                padding: 0;
+            }
+                .banner{
+                    position: relative;
+                    overflow: hidden;
+                    width: 508px;
+                    height:260px;
+                    background-color: red;
+                    margin-top: 0;
+                }
+
+                .banner ul{
+                    height: 100%;
+                    width: 500%;
+                    background-color: black;
+                }
+                .banner ul li{
+                    display: block;
+                    list-style: none;
+                    float: left;
+                    width: 508px;
+                    height: 100%;
+                    background-color: pink;
+                    margin-right: 0;
+                }
+                .banner ul li:nth-child(2n) {
+                    background-color: burlywood;
+                }
+                
+                .banner .slide-counter{
+                    z-index: 2;
+                    position: absolute;
+                    width: 108px;
+                    height: 28px;
+                    bottom: 0;
+                    right: 0;
+                }
+                .slide-counter span{
+                    display: inline-block;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    margin: 10px 0px 0px 8px;
+                    width:8px;
+                    height: 8px;
+                    overflow: hidden;
+                    line-height: 8px;
+                    background:#fff;
+                    color: #fff;
+                }
+                .slide-item:hover{
+                    background:#fd4c5d;
+                    color:#fd4c5d;
+                    width:16px;
+                }
+                .slide-counter .active{
+                    background:#fd4c5d;
+                    color:#fd4c5d;
+                    width:16px;
+                }
+            </style>
+        <script>
+            window.onload=function(){
+                var spanItem = document.querySelectorAll(".slide-item"),
+                    ul = document.querySelector("#banner"),
+                    index = 0,
+                    lastIndex = 0,
+                    defaultWdith = -508;
+                var leftMargin = window.getComputedStyle(ul, null)["marginLeft"];
+                for(var i = 0, len =spanItem.length; i < len; i++) {
+                    spanItem[i].index = i;
+                    
+                    spanItem[i].onclick = function(){
+                        var This = this.index;
+                        change(function(){
+                        index = This;
+                    })};
+                }
+                auto();
+                function change(callback) {
+                    callback();
+                    spanItem[index].classList.add("active");
+                    temp = parseInt(leftMargin) + defaultWdith*(index-lastIndex);
+                    leftMargin = eval(temp);
+                    ul.style.marginLeft = leftMargin;
+                    spanItem[lastIndex].classList.remove("active");
+                    lastIndex = index;
+                }
+                function auto() {
+                    setInterval(function(){
+                        change(function(){
+                        index = (index + 1) % spanItem.length;
+                    })}, 2000);
+                }
+            }
+            
+            
+        </script>
+    <body>
+        <!--
+            轮播图总结：
+            1. 本次采用的是div可见区域，以及使用ul加载全部图片，通过移动ul实现图片轮播
+                Note: ul中图片的实现是以改变margin-left实现的
+            2. js的实现
+                a. 使用window.getComputedStyle(node, null)[属性值] 获取ul的margin-left的值
+                b. 使用node.style.marginLeft = eval(Integer值) 设置新的margin-left值
+                c. setInterval(function, timeout) 实现图片自动轮播
+                d. 编写功能函数，在需要自定义的部分使用回调函数来完成
+        -->
+        <div class="banner">
+            <ul id="banner">
+                <li>
+                    <img src="images/img-5.jpg" />
+                </li>
+                <li>
+                        <img src="images/img-2.jpg" />
+                </li>
+                <li>
+                        <img src="images/img-3.jpg" />
+                </li>
+                <li>
+                        <img src="images/img-4.jpg" />
+                </li>
+            </ul>
+            <div class="slide-counter">
+                <span id="item1" class="slide-item active"></span>
+                <span id="item2" class="slide-item"></span>
+                <span id="item3" class="slide-item"></span>
+                <span id="item4" class="slide-item"></span>
+            </div>
+        </div>
+        
+    </body>
+</html>
